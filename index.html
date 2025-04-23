@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Complete Web Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #4a6bff;
+            --secondary-color: #ff6b6b;
+            --dark-color: #333;
+            --light-color: #f4f4f4;
+            --white: #fff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Navigation Styles */
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+        
+        nav li {
+            display: inline-block;
+        }
+        
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        nav a:hover, nav a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        /* Main Content Styles */
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        /* Home Page Styles */
+        .home-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            font-size: 2rem;
+            position: relative;
+        }
+        
+        .home-section h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+            margin: 0.5rem auto;
+            border-radius: 2px;
+        }
+        
+        /* Circular Product Grid for Home */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 2rem;
+            justify-items: center;
+        }
+        
+        .product-category {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .product-category:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid var(--white);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .product-category:hover .product-image-container {
+            border-color: var(--secondary-color);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .product-category:hover .product-image {
+            transform: scale(1.1);
+        }
+        
+        .product-category a {
+            text-decoration: none;
+            color: var(--dark-color);
+            display: block;
+        }
+        
+        .product-category p {
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            transition: color 0.3s ease;
+        }
+        
+        .product-category:hover p {
+            color: var(--primary-color);
+        }
+        
+        /* Category Pages Styles */
+        .category-section {
+            display: none;
+        }
+        
+        .category-section.active {
+            display: block;
+        }
+        
+        .category-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .category-header h2 {
+            color: var(--primary-color);
+            font-size: 2rem;
+            position: relative;
+            margin-bottom: 1rem;
+        }
+        
+        .category-header h2::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--secondary-color);
+            margin: 0.5rem auto;
+            border-radius: 2px;
+        }
+        
+        .category-header p {
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--dark-color);
+        }
+        
+        /* Product Grid */
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .product-card {
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 1.5rem;
+        }
+        
+        .product-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .product-description {
+            color: #666;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        .add-to-cart {
+            display: inline-block;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .add-to-cart:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .products {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .product-image-container {
+                width: 120px;
+                height: 120px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            nav ul {
+                gap: 0.5rem;
+            }
+            
+            nav a {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                gap: 1rem;
+            }
+            
+            .products {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-image-container {
+                width: 100px;
+                height: 100px;
+                border-width: 3px;
+            }
+            
+            .category-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Web Store</h1>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" data-category="home"><i class="fas fa-home"></i> Home</a></li>
+                <li><a href="#" class="nav-link" data-category="women"><i class="fas fa-female"></i> Womens</a></li>
+                <li><a href="#" class="nav-link" data-category="men"><i class="fas fa-male"></i> Mens</a></li>
+                <li><a href="#" class="nav-link" data-category="kids"><i class="fas fa-child"></i> Kids</a></li>
+                <li><a href="#" class="nav-link" data-category="utensils"><i class="fas fa-utensils"></i> Utensils</a></li>
+                <li><a href="#" class="nav-link" data-category="electronics"><i class="fas fa-laptop"></i> Electronics</a></li>
+                <li><a href="#" class="nav-link" data-category="wigs"><i class="fas fa-user-alt"></i> Ladies Wigs</a></li>
+                <li><a href="#" class="nav-link" data-category="sunglasses"><i class="fas fa-sun"></i> Sunglasses</a></li>
+                <li><a href="#" class="nav-link" data-category="shoes"><i class="fas fa-shoe-prints"></i> Shoes</a></li>
+                <li><a href="#" class="nav-link" data-category="watches"><i class="far fa-clock"></i> Watches</a></li>
+                <li><a href="#" class="nav-link" data-category="jewelry"><i class="fas fa-gem"></i> Jewelry</a></li>
+                <li><a href="#" class="nav-link" data-category="accessories"><i class="fas fa-tshirt"></i> Accessories</a></li>
+                <li><a href="#" class="nav-link" data-category="cosmetics"><i class="fas fa-paint-brush"></i> Cosmetics</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Home Section -->
+        <section id="home" class="home-section active">
+            <h2>Product Categories</h2>
+            <div class="product-grid">
+                <!-- Women's Category -->
+                <div class="product-category" data-category="women">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Women's Fashion" class="product-image">
+                    </div>
+                    <p>Women's</p>
+                </div>
+
+                <!-- Men's Category -->
+                <div class="product-category" data-category="men">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Men's Fashion" class="product-image">
+                    </div>
+                    <p>Men's</p>
+                </div>
+
+                <!-- Kids' Category -->
+                <div class="product-category" data-category="kids">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1604917018610-3849a14b3a0c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Kids' Fashion" class="product-image">
+                    </div>
+                    <p>Kids</p>
+                </div>
+
+                <!-- Utensils -->
+                <div class="product-category" data-category="utensils">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1585238342024-78d387f4a707?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Utensils" class="product-image">
+                    </div>
+                    <p>Utensils</p>
+                </div>
+
+                <!-- Electronics -->
+                <div class="product-category" data-category="electronics">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Electronics" class="product-image">
+                    </div>
+                    <p>Electronics</p>
+                </div>
+
+                <!-- Ladies Wigs -->
+                <div class="product-category" data-category="wigs">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Ladies Wigs" class="product-image">
+                    </div>
+                    <p>Ladies Wigs</p>
+                </div>
+
+                <!-- Sunglasses -->
+                <div class="product-category" data-category="sunglasses">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Sunglasses" class="product-image">
+                    </div>
+                    <p>Sunglasses</p>
+                </div>
+
+                <!-- Shoes -->
+                <div class="product-category" data-category="shoes">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Shoes" class="product-image">
+                    </div>
+                    <p>Shoes</p>
+                </div>
+
+                <!-- Watches -->
+                <div class="product-category" data-category="watches">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Watches" class="product-image">
+                    </div>
+                    <p>Watches</p>
+                </div>
+
+                <!-- Jewelry -->
+                <div class="product-category" data-category="jewelry">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Jewelry" class="product-image">
+                    </div>
+                    <p>Jewelry</p>
+                </div>
+
+                <!-- Accessories -->
+                <div class="product-category" data-category="accessories">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Accessories" class="product-image">
+                    </div>
+                    <p>Accessories</p>
+                </div>
+
+                <!-- Cosmetics -->
+                <div class="product-category" data-category="cosmetics">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Cosmetics" class="product-image">
+                    </div>
+                    <p>Cosmetics</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Women's Section -->
+        <section id="women" class="category-section">
+            <div class="category-header">
+                <h2>Women's Fashion</h2>
+                <p>Discover our exclusive collection of women's clothing, accessories, and more. Perfect for every occasion and style.</p>
+            </div>
+            
+            <div class="products">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Summer Dress" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">Floral Summer Dress</h3>
+                        <p class="product-price">$49.99</p>
+                        <p class="product-description">Lightweight and comfortable dress perfect for summer days.</p>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Women's Jeans" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">Slim Fit Jeans</h3>
+                        <p class="product-price">$59.99</p>
+                        <p class="product-description">Classic blue jeans with comfortable stretch fabric.</p>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Add more women's products as needed -->
+            </div>
+        </section>
+
+        <!-- Men's Section -->
+        <section id="men" class="category-section">
+            <div class="category-header">
+                <h2>Men's Fashion</h2>
+                <p>Explore our premium collection of men's clothing and accessories for all seasons and styles.</p>
+            </div>
+            
+            <div class="products">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Men's Shirt" class="product-image">
+                    <div class="product-info">
+                        <h3 class="product-title">Classic Formal Shirt</h3>
+                        <p class="product-price">$39.99</p>
+                        <p class="product-description">Premium cotton shirt for business or casual wear.</p>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Add more men's products as needed -->
+            </div>
+        </section>
+
+        <!-- Add all other category sections following the same pattern -->
+        <!-- Kids Section -->
+        <section id="kids" class="category-section">
+            <div class="category-header">
+                <h2>Kids Collection</h2>
+                <p>Adorable and comfortable clothing for your little ones in all sizes and styles.</p>
+            </div>
+            
+            <div class="products">
+                <!-- Product cards for kids -->
+            </div>
+        </section>
+
+        <!-- Utensils Section -->
+        <section id="utensils" class="category-section">
+            <div class="category-header">
+                <h2>Kitchen Utensils</h2>
+                <p>High-quality kitchen tools and utensils for your cooking needs.</p>
+            </div>
+            
+            <div class="products">
+                <!-- Product cards for utensils -->
+            </div>
+        </section>
+
+        <!-- Add remaining category sections -->
+        
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all navigation links and category sections
+            const navLinks = document.querySelectorAll('.nav-link');
+            const categorySections = document.querySelectorAll('.category-section, .home-section');
+            const categoryImages = document.querySelectorAll('.product-category');
+            
+            // Function to show a specific category
+            function showCategory(categoryId) {
+                // Hide all sections
+                categorySections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                
+                // Show the selected section
+                const activeSection = document.getElementById(categoryId);
+                if (activeSection) {
+                    activeSection.classList.add('active');
+                }
+                
+                // Update active nav link
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-category') === categoryId) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+            
+            // Add click event to nav links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.getAttribute('data-category');
+                    showCategory(category);
+                    
+                    // Smooth scroll to top
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // Add click event to category images on home page
+            categoryImages.forEach(image => {
+                image.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    showCategory(category);
+                    
+                    // Update active nav link
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('data-category') === category) {
+                            link.classList.add('active');
+                        }
+                    });
+                    
+                    // Smooth scroll to top
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // Initialize with home page
+            showCategory('home');
+        });
+    </script>
+</body>
+</html>
